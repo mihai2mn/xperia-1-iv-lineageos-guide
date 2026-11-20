@@ -13,6 +13,7 @@ A complete, battle-tested guide and collection of custom Magisk modules, SELinux
 4. [Phase 4: Native Sony Pro Camera Suite & Gyro Stabilization Fix](#phase-4-native-sony-pro-camera-suite--gyro-stabilization-fix)
 5. [Phase 5: Native Sony Audio Stack (Dolby Atmos + DSEE Ultimate + Wind Filter)](#phase-5-native-sony-audio-stack-dolby-atmos--dsee-ultimate--wind-filter)
 6. [Phase 6: Portable Rooted AI CLI & Bare-Metal Arch Linux ARM (`aarch64`) Node](#phase-6-portable-rooted-ai-cli--bare-metal-arch-linux-arm-aarch64-node)
+7. [Phase 7: Hardware Fixes (Broken Fingerprint Sensor Crash-Loop)](#phase-7-hardware-fixes-broken-fingerprint-sensor-crash-loop)
 
 ---
 
@@ -132,3 +133,19 @@ Because AI CLIs like **Claude Code**, **Antigravity CLI (`agy`)**, and **Happy (
    - **Termux:X11:** Run `gui` in Termux to launch a full-screen 120Hz `xfce4-terminal` inside the **Termux:X11** Android app.
 
 > **SELinux Tip for Termux:** If you ever run `apt-get` or create files inside `/data/data/com.termux/files/usr` from ADB `su`, always restore Termux's SELinux MCS context (`chcon -hR "$(stat -c %C /data/data/com.termux/files/usr)" /data/data/com.termux/files/usr/bin /data/data/com.termux/files/usr/lib`), otherwise Android will deny execution with `Permission denied`.
+
+---
+
+## Phase 7: Hardware Fixes (Broken Fingerprint Sensor Crash-Loop)
+
+A very common age-related hardware failure on the Xperia 1 IV (`pdx223`) is the side-mounted power-button **fingerprint sensor flex cable** degrading or failing. When the hardware stops responding over SPI/I2C, the fingerprint HAL (`android.hardware.biometrics.fingerprint` / `vendor.fps_hal` / `vendor.somc.hardware.biometrics.fingerprint`) enters a continuous crash-restart loop in `init`, which causes:
+- Noticeable idle battery drain and warm standby temperatures
+- `Settings → Security` freezing or taking 10+ seconds to open
+- Periodic `SystemUI` / lock-screen stutters and `logcat` spam
+
+If your fingerprint sensor is dead and you haven't replaced the flex cable yet, run [`scripts/disable_broken_fingerprint.sh`](scripts/disable_broken_fingerprint.sh) to install a lightweight, reversible Magisk module (`disable_broken_fingerprint`) that stops the failing fingerprint HAL service on boot (`service.sh`) without modifying `/vendor`:
+```bash
+adb push scripts/disable_broken_fingerprint.sh /data/local/tmp/
+adb shell su -c "sh /data/local/tmp/disable_broken_fingerprint.sh"
+```
+To re-enable it later (e.g., after replacing the power-button flex cable), simply disable or remove the `disable_broken_fingerprint` module in Magisk and reboot.
