@@ -1,0 +1,18 @@
+<permissions>
+    <privapp-permissions package="com.sonymobile.photopro">
+        <permission name="android.permission.WRITE_SECURE_SETTINGS"/>
+        <permission name="com.sonymobile.permission.SOMC_CAMERA"/>
+        <permission name="com.sonymobile.permission.CAMERA_ADDON"/>
+        <permission name="com.sonymobile.permission.CAMERA_STATUS_PROVIDER"/>
+    </privapp-permissions>
+    <privapp-permissions package="jp.co.sony.mc.videopro">
+        <permission name="com.sonymobile.permission.SOMC_CAMERA"/>
+        <permission name="com.sonymobile.permission.CAMERA_ADDON"/>
+        <permission name="com.sonymobile.permission.CAMERA_STATUS_PROVIDER"/>
+    </privapp-permissions>
+    <privapp-permissions package="com.sonymobile.cinemapro">
+        <permission name="com.sonymobile.permission.SOMC_CAMERA"/>
+        <permission name="com.sonymobile.permission.CAMERA_ADDON"/>
+        <permission name="com.sonymobile.permission.CAMERA_STATUS_PROVIDER"/>
+    </privapp-permissions>
+</permissions>
